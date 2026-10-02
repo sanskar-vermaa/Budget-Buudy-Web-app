@@ -75,8 +75,7 @@ const SignUpSignIn = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const user = result.user;
+      await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
       toast.success("Logged In Successfully!");
       setLoading(false);

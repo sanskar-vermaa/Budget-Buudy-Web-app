@@ -1,11 +1,8 @@
-import React, { useRef, useState } from "react";
-import { Input, Table, Select, Radio } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Table, Select, Radio } from "antd";
 import search from "../assets/search.svg";
 import { parse } from "papaparse";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-const { Search } = Input;
 const { Option } = Select;
 
 const TransactionSearch = ({
@@ -15,10 +12,9 @@ const TransactionSearch = ({
   fetchTransactions,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTag, setSelectedTag] = useState("");
+  const [selectedTag] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortKey, setSortKey] = useState("");
-  const fileInput = useRef();
 
   function importFromCsv(event) {
     event.preventDefault();
@@ -116,7 +112,7 @@ const TransactionSearch = ({
         }}
       >
         <div className="input-flex">
-          <img src={search} width="16" />
+          <img src={search} width="16" alt="" />
           <input
             placeholder="Search by Name"
             onChange={(e) => setSearchTerm(e.target.value)}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./styles.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import userSvg from "../../assets/user.svg";
@@ -27,6 +27,7 @@ function Header() {
         <p className="navbar-link" onClick={logout}>
           <span style={{ marginRight: "1rem" }}>
             <img
+              alt="Account"
               src={user.photoURL ? user.photoURL : userSvg}
               width={user.photoURL ? "32" : "24"}
               style={{ borderRadius: "50%" }}

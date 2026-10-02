@@ -13,7 +13,6 @@ import { auth, db } from "../firebase";
 import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import Loader from "./Loader";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { unparse } from "papaparse";
 
 const Dashboard = () => {
@@ -50,7 +49,6 @@ const Dashboard = () => {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
 
-  const navigate = useNavigate();
 
   const processChartData = () => {
     const balanceData = [];
@@ -108,9 +106,12 @@ const Dashboard = () => {
     setIsIncomeModalVisible(false);
   };
 
+  // Transactions are stored per user, so load them once Firebase has
+  // restored the session (user is null on the first render after a reload).
   useEffect(() => {
     fetchTransactions();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -125,10 +126,10 @@ const Dashboard = () => {
     setIsExpenseModalVisible(false);
     setIsIncomeModalVisible(false);
     addTransaction(newTransaction);
-    calculateBalance();
   };
 
-  const calculateBalance = () => {
+  // Keep the totals in sync with the transaction list.
+  useEffect(() => {
     let incomeTotal = 0;
     let expensesTotal = 0;
 
@@ -143,11 +144,6 @@ const Dashboard = () => {
     setIncome(incomeTotal);
     setExpenses(expensesTotal);
     setCurrentBalance(incomeTotal - expensesTotal);
-  };
-
-  // Calculate the initial balance, income, and expenses
-  useEffect(() => {
-    calculateBalance();
   }, [transactions]);
 
   async function addTransaction(transaction, many) {
@@ -260,7 +256,7 @@ const Dashboard = () => {
 
                 <Card bordered={true} style={{ ...cardStyle, flex: 0.45 }}>
                   <h2>Total Spending</h2>
-                  {spendingDataArray.length == 0 ? (
+                  {spendingDataArray.length === 0 ? (
                     <p>Seems like you haven't spent anything till now...</p>
                   ) : (
                     <Pie {...{ ...spendingConfig, data: spendingDataArray }} />
